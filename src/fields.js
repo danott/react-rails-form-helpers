@@ -1,5 +1,5 @@
-import * as Tags from "tags"
-import { nameWithContext } from "utils"
+import * as Tags from "./tags"
+import { nameWithContext } from "./utils"
 
 export const Checkbox = nameWithContext(Tags.CheckboxTag)
 export const ColorField = nameWithContext(Tags.ColorFieldTag)

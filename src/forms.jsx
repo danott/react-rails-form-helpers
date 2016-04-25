@@ -1,5 +1,5 @@
 import { createClass, PropTypes } from "react"
-import { HiddenFieldTag } from "tags"
+import { HiddenFieldTag } from "./tags"
 
 export const FormTag = createClass({
   propTypes: {

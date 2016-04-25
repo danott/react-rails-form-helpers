@@ -1,5 +1,3 @@
-import { omit } from "lodash"
-
 export const CheckboxTag = (props) => (
   <input type="checkbox" {...props} />
 )
@@ -57,7 +55,7 @@ export const SearchFieldTag = (props) => (
 )
 
 export const SelectTag = (props) => (
-  <select {...omit(props, "children")}>{props.children}</select>
+  <select {...props}>{props.children}</select>
 )
 
 export const SubmitTag = (props) => (

@@ -1,10 +1,18 @@
 {
   "name": "react-rails-form-helpers",
-  "version": "0.0.1",
+  "version": "0.1.0-beta",
   "description": "Build forms that will be submitted to Rails in React.",
-  "main": "src/index.js",
+  "main": "lib/index.js",
+  "repository": "danott/react-rails-form-helpers",
+  "keywords": [
+    "react",
+    "rails",
+    "forms"
+  ],
   "scripts": {
-    "build": "webpack",
+    "build": "npm run build:lib && npm run build:dist",
+    "build:dist": "NODE_ENV=production webpack",
+    "build:lib": "babel ./src --out-dir ./lib --stage 0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Dan Ott <npmjs@danott.us> (https://danott.co)",
@@ -20,7 +28,6 @@
     "eslint": "^2.8.0",
     "eslint-config-rackt": "^1.1.1",
     "eslint-plugin-react": "^5.0.1",
-    "lodash": "^4.11.1",
     "react": "^15.0.1",
     "webpack": "^1.13.0"
   },

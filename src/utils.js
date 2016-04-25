@@ -1,7 +1,7 @@
 export const buildInputName = (namespaces, name) => {
   if (!namespaces || namespaces.length === 0) { return name }
 
-  let allTheFields = [...namespaces, name]
+  let allTheFields = [ ...namespaces, name ]
   let finalName = allTheFields.unshift()
 
   while (allTheFields.length > 0) {
