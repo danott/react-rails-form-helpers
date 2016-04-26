@@ -88,4 +88,8 @@ export const FieldsFor = createClass({
       railsFormNamespaces: [ ...this.context.railsFormNamespaces, namespace, index ],
     }
   },
+
+  render() {
+    return this.props.children
+  },
 })
