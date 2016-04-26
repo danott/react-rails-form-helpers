@@ -1,7 +1,8 @@
-import { createClass, PropTypes } from "react"
+import React, { PropTypes } from "react"
 import { HiddenFieldTag } from "./tags"
+import { whitelistProps } from "./utils"
 
-export const FormTag = createClass({
+export const FormTag = React.createClass({
   propTypes: {
     url: PropTypes.string.isRequired,
     method: PropTypes.oneOf([ "get", "post", "put", "patch", "delete" ]),
@@ -24,12 +25,31 @@ export const FormTag = createClass({
       fakedHTTPMethod = this.props.method
     }
 
+    const csrfToken = document.querySelector("head meta[name='csrf-token']")
+
     return (
-      <form accept-charset="UTF-8" action={this.props.url} method={browserHTTPMethod}>
+      <form
+        {...whitelistProps(this.props, "url", "children")}
+        acceptCharset="UTF-8"
+        action={this.props.url}
+        method={browserHTTPMethod}
+        >
         {fakedHTTPMethod && (
-          <HiddenFieldTag name="_method" value={fakedHTTPMethod} />
+          <HiddenFieldTag
+            name="_method"
+            value={fakedHTTPMethod}
+            />
         )}
-        <HiddenFieldTag name="utf8" value="&#x2713;" />
+        {csrfToken && (
+          <HiddenFieldTag
+            name="authenticity_token"
+            value={csrfToken.content}
+            />
+        )}
+        <HiddenFieldTag
+          name="utf8"
+          value="&#x2713;"
+          />
         {this.props.children}
       </form>
     )
@@ -37,9 +57,15 @@ export const FormTag = createClass({
 })
 
 
-export const FormFor = createClass({
+export const FormFor = React.createClass({
   propTypes: {
-    namespace: PropTypes.string.isRequired,
+    name: PropTypes.string,
+  },
+
+  getDefaultProps() {
+    return {
+      name: "",
+    }
   },
 
   childContextTypes: {
@@ -48,7 +74,7 @@ export const FormFor = createClass({
 
   getChildContext() {
     return {
-      railsFormNamespaces: [ this.props.namespace ],
+      railsFormNamespaces: [ this.props.name ],
     }
   },
 
@@ -61,16 +87,9 @@ export const FormFor = createClass({
   },
 })
 
-export const FieldsFor = createClass({
+export const FieldsFor = React.createClass({
   propTypes: {
-    namespace: PropTypes.string.isRequired,
-    index: PropTypes.oneOf([ PropTypes.string, PropTypes.number ]),
-  },
-
-  getDefaultProps() {
-    return {
-      index: "",
-    }
+    name: PropTypes.string.isRequired,
   },
 
   contextTypes: {
@@ -82,14 +101,18 @@ export const FieldsFor = createClass({
   },
 
   getChildContext() {
-    const { namespace, index } = this.props
-
     return {
-      railsFormNamespaces: [ ...this.context.railsFormNamespaces, namespace, index ],
+      railsFormNamespaces: [
+        ...this.context.railsFormNamespaces,
+        this.props.name,
+      ],
     }
   },
 
   render() {
-    return this.props.children
+    return <span>{this.props.children}</span>
   },
 })
+
+export const ArrayFields = FieldsFor
+export const HashFields = FieldsFor

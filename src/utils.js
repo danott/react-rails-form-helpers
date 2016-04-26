@@ -1,20 +1,28 @@
-export const buildInputName = (namespaces, name) => {
-  if (!namespaces || namespaces.length === 0) { return name }
+import React, { PropTypes } from "react"
 
-  let allTheFields = [ ...namespaces, name ]
-  let finalName = allTheFields.unshift()
-
-  while (allTheFields.length > 0) {
-    finalName = `${finalName}[${allTheFields.unshift()}]`
-  }
-
-  return finalName
-}
 
 export const nameWithContext = (Lower, prop = "name") => {
-  return (props, context) => {
+  const getDisplayName = (Lower) => ((Lower.displayName || Lower.name).replace(/Tag$/, ""))
+
+  const buildInputName = (namespaces, name = "") => (
+    [ ...namespaces, name ].map((field, index) => ( index === 0 ? field : `[${field}]` )).join("")
+  )
+
+  const higher = (props, context) => {
     const replacedProp = buildInputName(context.railsFormNamespaces, props[prop])
     const replacedProps = Object.assign({}, props, { [prop]: replacedProp })
     return <Lower {...replacedProps} />
   }
+
+  higher.displayName = getDisplayName(Lower)
+  higher.contextTypes = { railsFormNamespaces: PropTypes.arrayOf(PropTypes.string) }
+
+  return higher
+}
+
+export const whitelistProps = (props, ...omit) => {
+  const alwaysOmit = [ "key", "ref", ...omit ]
+  const cloned = { ...props }
+  alwaysOmit.forEach((key) => delete cloned[key])
+  return cloned
 }

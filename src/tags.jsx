@@ -1,5 +1,10 @@
-export const CheckboxTag = (props) => (
-  <input type="checkbox" {...props} />
+import { whitelistProps } from "./utils"
+
+export const CheckBoxTag = (props) => (
+  <span>
+    <HiddenFieldTag value="0" {...props} />
+    <input type="checkbox" value="1" {...props} />
+  </span>
 )
 
 export const ColorFieldTag = (props) => (
@@ -27,7 +32,7 @@ export const HiddenFieldTag = (props) => (
 )
 
 export const LabelTag = (props) => (
-  <label {...props} />
+  <label {...whitelistProps(props)} />
 )
 
 export const MonthFieldTag = (props) => (
@@ -55,7 +60,7 @@ export const SearchFieldTag = (props) => (
 )
 
 export const SelectTag = (props) => (
-  <select {...props}>{props.children}</select>
+  <select {...whitelistProps(props)} />
 )
 
 export const SubmitTag = (props) => (
@@ -67,7 +72,7 @@ export const TelephoneFieldTag = (props) => (
 )
 
 export const TextAreaTag = (props) => (
-  <textarea {...props} />
+  <textarea {...whitelistProps(props)} />
 )
 
 export const TextFieldTag = (props) => (

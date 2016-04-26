@@ -72,7 +72,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  });
 	});
 
-	var _fields = __webpack_require__(4);
+	var _fields = __webpack_require__(5);
 
 	Object.keys(_fields).forEach(function (key) {
 	  if (key === "default") return;
@@ -105,15 +105,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.FieldsFor = exports.FormFor = exports.FormTag = undefined;
+	exports.HashFields = exports.ArrayFields = exports.FieldsFor = exports.FormFor = exports.FormTag = undefined;
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	var _react = __webpack_require__(2);
 
+	var _react2 = _interopRequireDefault(_react);
+
 	var _tags = __webpack_require__(3);
+
+	var _utils = __webpack_require__(4);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-	var FormTag = exports.FormTag = (0, _react.createClass)({
+	var FormTag = exports.FormTag = _react2.default.createClass({
+	  displayName: "FormTag",
+
 	  propTypes: {
 	    url: _react.PropTypes.string.isRequired,
 	    method: _react.PropTypes.oneOf(["get", "post", "put", "patch", "delete"]),
@@ -135,20 +145,45 @@ return /******/ (function(modules) { // webpackBootstrap
 	      fakedHTTPMethod = this.props.method;
 	    }
 
-	    return React.createElement(
+	    var csrfToken = document.querySelector("head meta[name='csrf-token']");
+
+	    return _react2.default.createElement(
 	      "form",
-	      { "accept-charset": "UTF-8", action: this.props.url, method: browserHTTPMethod },
-	      fakedHTTPMethod && React.createElement(_tags.HiddenFieldTag, { name: "_method", value: fakedHTTPMethod }),
-	      React.createElement(_tags.HiddenFieldTag, { name: "utf8", value: "✓" }),
+	      _extends({}, (0, _utils.whitelistProps)(this.props, "url", "children"), {
+	        acceptCharset: "UTF-8",
+	        action: this.props.url,
+	        method: browserHTTPMethod
+	      }),
+	      fakedHTTPMethod && _react2.default.createElement(_tags.HiddenFieldTag, {
+	        name: "_method",
+	        value: fakedHTTPMethod
+	      }),
+	      csrfToken && _react2.default.createElement(_tags.HiddenFieldTag, {
+	        name: "authenticity_token",
+	        value: csrfToken.content
+	      }),
+	      _react2.default.createElement(_tags.HiddenFieldTag, {
+	        name: "utf8",
+	        value: "✓"
+	      }),
 	      this.props.children
 	    );
 	  }
 	});
 
-	var FormFor = exports.FormFor = (0, _react.createClass)({
+	var FormFor = exports.FormFor = _react2.default.createClass({
+	  displayName: "FormFor",
+
 	  propTypes: {
-	    namespace: _react.PropTypes.string.isRequired
+	    name: _react.PropTypes.string
 	  },
+
+	  getDefaultProps: function getDefaultProps() {
+	    return {
+	      name: ""
+	    };
+	  },
+
 
 	  childContextTypes: {
 	    railsFormNamespaces: _react.PropTypes.arrayOf(_react.PropTypes.string)
@@ -156,11 +191,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  getChildContext: function getChildContext() {
 	    return {
-	      railsFormNamespaces: [this.props.namespace]
+	      railsFormNamespaces: [this.props.name]
 	    };
 	  },
 	  render: function render() {
-	    return React.createElement(
+	    return _react2.default.createElement(
 	      FormTag,
 	      this.props,
 	      this.props.children
@@ -168,18 +203,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	});
 
-	var FieldsFor = exports.FieldsFor = (0, _react.createClass)({
+	var FieldsFor = exports.FieldsFor = _react2.default.createClass({
+	  displayName: "FieldsFor",
+
 	  propTypes: {
-	    namespace: _react.PropTypes.string.isRequired,
-	    index: _react.PropTypes.oneOf([_react.PropTypes.string, _react.PropTypes.number])
+	    name: _react.PropTypes.string.isRequired
 	  },
-
-	  getDefaultProps: function getDefaultProps() {
-	    return {
-	      index: ""
-	    };
-	  },
-
 
 	  contextTypes: {
 	    railsFormNamespaces: _react.PropTypes.arrayOf(_react.PropTypes.string)
@@ -190,16 +219,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	  },
 
 	  getChildContext: function getChildContext() {
-	    var _props = this.props;
-	    var namespace = _props.namespace;
-	    var index = _props.index;
-
-
 	    return {
-	      railsFormNamespaces: [].concat(_toConsumableArray(this.context.railsFormNamespaces), [namespace, index])
+	      railsFormNamespaces: [].concat(_toConsumableArray(this.context.railsFormNamespaces), [this.props.name])
 	    };
+	  },
+	  render: function render() {
+	    return _react2.default.createElement(
+	      "span",
+	      null,
+	      this.props.children
+	    );
 	  }
 	});
+
+	var ArrayFields = exports.ArrayFields = FieldsFor;
+	var HashFields = exports.HashFields = FieldsFor;
 
 /***/ },
 /* 2 */
@@ -209,18 +243,26 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 3 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.WeekFieldTag = exports.UrlFieldTag = exports.TimeFieldTag = exports.TextFieldTag = exports.TextAreaTag = exports.TelephoneFieldTag = exports.SubmitTag = exports.SelectTag = exports.SearchFieldTag = exports.RangeFieldTag = exports.RadioTag = exports.PasswordFieldTag = exports.NumberFieldTag = exports.MonthFieldTag = exports.LabelTag = exports.HiddenFieldTag = exports.EmailFieldTag = exports.DatetimeLocalFieldTag = exports.DatetimeFieldTag = exports.DateFieldTag = exports.ColorFieldTag = exports.CheckBoxTag = undefined;
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-	var CheckboxTag = exports.CheckboxTag = function CheckboxTag(props) {
-	  return React.createElement("input", _extends({ type: "checkbox" }, props));
+	var _utils = __webpack_require__(4);
+
+	var CheckBoxTag = exports.CheckBoxTag = function CheckBoxTag(props) {
+	  return React.createElement(
+	    "span",
+	    null,
+	    React.createElement(HiddenFieldTag, _extends({ value: "0" }, props)),
+	    React.createElement("input", _extends({ type: "checkbox", value: "1" }, props))
+	  );
 	};
 
 	var ColorFieldTag = exports.ColorFieldTag = function ColorFieldTag(props) {
@@ -248,7 +290,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	var LabelTag = exports.LabelTag = function LabelTag(props) {
-	  return React.createElement("label", props);
+	  return React.createElement("label", (0, _utils.whitelistProps)(props));
 	};
 
 	var MonthFieldTag = exports.MonthFieldTag = function MonthFieldTag(props) {
@@ -276,11 +318,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	var SelectTag = exports.SelectTag = function SelectTag(props) {
-	  return React.createElement(
-	    "select",
-	    props,
-	    props.children
-	  );
+	  return React.createElement("select", (0, _utils.whitelistProps)(props));
 	};
 
 	var SubmitTag = exports.SubmitTag = function SubmitTag(props) {
@@ -292,7 +330,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	var TextAreaTag = exports.TextAreaTag = function TextAreaTag(props) {
-	  return React.createElement("textarea", props);
+	  return React.createElement("textarea", (0, _utils.whitelistProps)(props));
 	};
 
 	var TextFieldTag = exports.TextFieldTag = function TextFieldTag(props) {
@@ -320,17 +358,79 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.WeekField = exports.UrlField = exports.TimeField = exports.TextField = exports.TextArea = exports.TelephoneField = exports.Submit = exports.Select = exports.SearchField = exports.RangeField = exports.Radio = exports.PasswordField = exports.NumberField = exports.MonthField = exports.Label = exports.HiddenField = exports.EmailField = exports.DatetimeLocalField = exports.DatetimeField = exports.DateField = exports.ColorField = exports.Checkbox = undefined;
+	exports.whitelistProps = exports.nameWithContext = undefined;
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+	var nameWithContext = exports.nameWithContext = function nameWithContext(Lower) {
+	  var prop = arguments.length <= 1 || arguments[1] === undefined ? "name" : arguments[1];
+
+	  var getDisplayName = function getDisplayName(Lower) {
+	    return (Lower.displayName || Lower.name).replace(/Tag$/, "");
+	  };
+
+	  var buildInputName = function buildInputName(namespaces) {
+	    var name = arguments.length <= 1 || arguments[1] === undefined ? "" : arguments[1];
+	    return [].concat(_toConsumableArray(namespaces), [name]).map(function (field, index) {
+	      return index === 0 ? field : "[" + field + "]";
+	    }).join("");
+	  };
+
+	  var higher = function higher(props, context) {
+	    var replacedProp = buildInputName(context.railsFormNamespaces, props[prop]);
+	    var replacedProps = Object.assign({}, props, _defineProperty({}, prop, replacedProp));
+	    return _react2.default.createElement(Lower, replacedProps);
+	  };
+
+	  higher.displayName = getDisplayName(Lower);
+	  higher.contextTypes = { railsFormNamespaces: _react.PropTypes.arrayOf(_react.PropTypes.string) };
+
+	  return higher;
+	};
+
+	var whitelistProps = exports.whitelistProps = function whitelistProps(props) {
+	  for (var _len = arguments.length, omit = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+	    omit[_key - 1] = arguments[_key];
+	  }
+
+	  var alwaysOmit = ["key", "ref"].concat(omit);
+	  var cloned = _extends({}, props);
+	  alwaysOmit.forEach(function (key) {
+	    return delete cloned[key];
+	  });
+	  return cloned;
+	};
+
+/***/ },
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.WeekField = exports.UrlField = exports.TimeField = exports.TextField = exports.TextArea = exports.TelephoneField = exports.Submit = exports.Select = exports.SearchField = exports.RangeField = exports.Radio = exports.PasswordField = exports.NumberField = exports.MonthField = exports.Label = exports.HiddenField = exports.EmailField = exports.DatetimeLocalField = exports.DatetimeField = exports.DateField = exports.ColorField = exports.CheckBox = undefined;
 
 	var _tags = __webpack_require__(3);
 
 	var Tags = _interopRequireWildcard(_tags);
 
-	var _utils = __webpack_require__(5);
+	var _utils = __webpack_require__(4);
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-	var Checkbox = exports.Checkbox = (0, _utils.nameWithContext)(Tags.CheckboxTag);
+	var CheckBox = exports.CheckBox = (0, _utils.nameWithContext)(Tags.CheckBoxTag);
 	var ColorField = exports.ColorField = (0, _utils.nameWithContext)(Tags.ColorFieldTag);
 	var DateField = exports.DateField = (0, _utils.nameWithContext)(Tags.DateFieldTag);
 	var DatetimeField = exports.DatetimeField = (0, _utils.nameWithContext)(Tags.DatetimeFieldTag);
@@ -352,45 +452,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	var TimeField = exports.TimeField = (0, _utils.nameWithContext)(Tags.TimeFieldTag);
 	var UrlField = exports.UrlField = (0, _utils.nameWithContext)(Tags.UrlFieldTag);
 	var WeekField = exports.WeekField = (0, _utils.nameWithContext)(Tags.WeekFieldTag);
-
-/***/ },
-/* 5 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-	var buildInputName = exports.buildInputName = function buildInputName(namespaces, name) {
-	  if (!namespaces || namespaces.length === 0) {
-	    return name;
-	  }
-
-	  var allTheFields = [].concat(_toConsumableArray(namespaces), [name]);
-	  var finalName = allTheFields.unshift();
-
-	  while (allTheFields.length > 0) {
-	    finalName = finalName + "[" + allTheFields.unshift() + "]";
-	  }
-
-	  return finalName;
-	};
-
-	var nameWithContext = exports.nameWithContext = function nameWithContext(Lower) {
-	  var prop = arguments.length <= 1 || arguments[1] === undefined ? "name" : arguments[1];
-
-	  return function (props, context) {
-	    var replacedProp = buildInputName(context.railsFormNamespaces, props[prop]);
-	    var replacedProps = Object.assign({}, props, _defineProperty({}, prop, replacedProp));
-	    return React.createElement(Lower, replacedProps);
-	  };
-	};
 
 /***/ }
 /******/ ])

@@ -1,7 +1,7 @@
 import * as Tags from "./tags"
 import { nameWithContext } from "./utils"
 
-export const Checkbox = nameWithContext(Tags.CheckboxTag)
+export const CheckBox = nameWithContext(Tags.CheckBoxTag)
 export const ColorField = nameWithContext(Tags.ColorFieldTag)
 export const DateField = nameWithContext(Tags.DateFieldTag)
 export const DatetimeField = nameWithContext(Tags.DatetimeFieldTag)
