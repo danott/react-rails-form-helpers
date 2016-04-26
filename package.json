@@ -13,8 +13,16 @@
     "build": "npm run build:lib && npm run build:dist",
     "build:dist": "NODE_ENV=production webpack",
     "build:lib": "babel ./src --out-dir ./lib --stage 0",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev:dist": "NODE_ENV=production webpack --watch",
+    "dev:lib": "babel ./src --out-dir ./lib --stage 0 --watch",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublish": "npm run build"
   },
+  "files": [
+    "dist",
+    "lib",
+    "src"
+  ],
   "author": "Dan Ott <npmjs@danott.us> (https://danott.co)",
   "license": "MIT",
   "devDependencies": {
