@@ -53,7 +53,9 @@ That's it.
 
 `FieldsFor` is aliased as `HashFields` and `ArrayFields` for expressing intent.
 
-### An example
+### Example
+
+Let's build an example form with the `FormFor` component for generating correctly named field inputs.
 
 ```jsx
 const EditOrderForm = React.createClass({
@@ -126,4 +128,78 @@ const EditOrderForm = React.createClass({
     )
   }
 })
+```
+
+The raw HTML output for this form (sanitized for legibility)
+
+```html
+<form accept-charset="UTF-8" action="/orders/1" id="order" method="post">
+  <input name="_method" readonly type="hidden" value="put">
+  <input name="authenticity_token" readonly type="hidden" value="csrf_token_from_head">
+  <input name="utf8" readonly type="hidden" value="✓">
+
+  <label for="order[customer][name]">Name</label>
+  <input name="order[customer][name]" type="text">
+
+  <label for="order[customer][email]">Email</label>
+  <input name="order[customer][mail]" type="email">
+
+  <div>
+    <input name="order[burgers][0][id]" type="hidden" value="1">
+
+    <label for="order[burgers][0][variety]">Variety</label>
+    <select name="order[burgers][0][variety]">
+      <option>
+        Hamburger
+      </option>
+      <option>
+        Cheeseburger
+      </option>
+      <option>
+        Bacon Cheeseburger
+      </option>
+    </select>
+
+    <label for="order[burgers][0][add_fried_egg]">Add a fried egg?</label>
+    <input name="order[burgers][0][add_fried_egg]" readonly type="hidden" value="0">
+    <input name="order[burgers][0][add_fried_egg]" type="checkbox" value="1">
+
+    <a>Remove from order</a></span>
+  </div>
+
+  <div>
+    <input name="order[burgers][1][id]" type="hidden" value="2">
+
+    <label for="order[burgers][1][variety]">Variety</label>
+    <select name="order[burgers][1][variety]">
+      <option>
+        Hamburger
+      </option>
+      <option>
+        Cheeseburger
+      </option>
+      <option>
+        Bacon Cheeseburger
+      </option>
+    </select>
+
+    <label for="order[burgers][1][add_fried_egg]">Add a fried egg?</label>
+    <input name="order[burgers][1][add_fried_egg]" readonly type="hidden" value="0">
+    <input name="order[burgers][1][add_fried_egg]" type="checkbox" value="1">
+
+    <a>Remove from order</a>
+  </div>
+
+  <div>
+    <input name="order[burgers][2][id]" type="hidden" value="3">
+    <input name="order[burgers][2][_destroy]" type="text" value="1">
+  </div>
+
+  <a>Add a burger</a>
+
+  <label for="order[notes]">Notes</label>
+  <textarea name="order[notes]"></textarea>
+
+  <input name="order[commit]" type="submit" value="Update order">
+</form>
 ```
