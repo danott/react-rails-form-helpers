@@ -102,17 +102,19 @@ const EditOrderForm = React.createClass({
               {burger.destroy ? (
                 <DestroyField />
               ) : (
-                <Label htmlFor="variety">Variety</Label>
-                <Select name="variety" defaultValue={burger.variety}>
-                  <option>Hamburger</option>
-                  <option>Cheeseburger</option>
-                  <option>Bacon Cheeseburger</option>
-                </Select>
+                <div>
+                  <Label htmlFor="variety">Variety</Label>
+                  <Select name="variety" defaultValue={burger.variety}>
+                    <option>Hamburger</option>
+                    <option>Cheeseburger</option>
+                    <option>Bacon Cheeseburger</option>
+                  </Select>
 
-                <Label htmlFor="add_fried_egg">Add a fried egg?</Label>
-                <CheckBox name="add_fried_egg" defaultChecked={burger.add_fried_egg} />
+                  <Label htmlFor="add_fried_egg">Add a fried egg?</Label>
+                  <CheckBox name="add_fried_egg" defaultChecked={burger.add_fried_egg} />
 
-                <a onClick={this.handleRemoveBurger(burger)}>Remove from order</a>
+                  <a onClick={this.handleRemoveBurger(burger)}>Remove from order</a>
+                </div>
               )}
             </HashFields>
           })}
