@@ -23,3 +23,4 @@ export const TextField = nameWithContext(Tags.TextFieldTag)
 export const TimeField = nameWithContext(Tags.TimeFieldTag)
 export const UrlField = nameWithContext(Tags.UrlFieldTag)
 export const WeekField = nameWithContext(Tags.WeekFieldTag)
+export const DestroyField = () => <HiddenField name="_destroy" value="1" />
