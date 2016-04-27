@@ -146,9 +146,8 @@ The raw HTML output for this form (sanitized for legibility)
   <label for="order[customer][email]">Email</label>
   <input name="order[customer][mail]" type="email">
 
+  <input name="order[burgers][0][id]" type="hidden" value="1">
   <div>
-    <input name="order[burgers][0][id]" type="hidden" value="1">
-
     <label for="order[burgers][0][variety]">Variety</label>
     <select name="order[burgers][0][variety]">
       <option>
@@ -169,9 +168,8 @@ The raw HTML output for this form (sanitized for legibility)
     <a>Remove from order</a></span>
   </div>
 
+  <input name="order[burgers][1][id]" type="hidden" value="2">
   <div>
-    <input name="order[burgers][1][id]" type="hidden" value="2">
-
     <label for="order[burgers][1][variety]">Variety</label>
     <select name="order[burgers][1][variety]">
       <option>
@@ -192,10 +190,8 @@ The raw HTML output for this form (sanitized for legibility)
     <a>Remove from order</a>
   </div>
 
-  <div>
-    <input name="order[burgers][2][id]" type="hidden" value="3">
-    <input name="order[burgers][2][_destroy]" type="text" value="1">
-  </div>
+  <input name="order[burgers][2][id]" type="hidden" value="3">
+  <input name="order[burgers][2][_destroy]" type="hidden" value="1">
 
   <a>Add a burger</a>
 
