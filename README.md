@@ -1,5 +1,19 @@
 # React Rails Form Helpers
 
+## Installation
+
+Using via npm
+
+```
+npm install --save react-rails-form-helpers
+```
+
+Usage via vendoring
+
+You can grab the latest UMD build from https://npmcdn.com/react-rails-form-helpers@latest/dist/react-rails-form-helpers.js
+
+## About
+
 This package provides components for composing a form targeted at Rails.
 The main intent of this package is for communicating the intent of the form via named components.
 If you're scared by *Rails Magic* you'll be happy to know that these components are mostly dumb.
