@@ -64,7 +64,7 @@ export const FormFor = React.createClass({
 
   getDefaultProps() {
     return {
-      name: "",
+      name: null,
     }
   },
 
@@ -74,7 +74,7 @@ export const FormFor = React.createClass({
 
   getChildContext() {
     return {
-      railsFormNamespaces: [ this.props.name ],
+      railsFormNamespaces: this.props.name ? [ this.props.name ] : [],
     }
   },
 
