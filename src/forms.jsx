@@ -100,6 +100,12 @@ export const FieldsFor = React.createClass({
     railsFormNamespaces: PropTypes.arrayOf(PropTypes.string),
   },
 
+  getDefaultProps() {
+    return {
+      name: "",
+    }
+  },
+
   getChildContext() {
     return {
       railsFormNamespaces: [
