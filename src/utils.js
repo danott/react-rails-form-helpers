@@ -2,7 +2,7 @@ import React, { PropTypes } from "react"
 
 
 export const nameWithContext = (Lower, prop = "name") => {
-  const getDisplayName = (Lower) => ((Lower.displayName || Lower.name).replace(/Tag$/, ""))
+  const getDisplayName = (Lower) => ((Lower.displayName || Lower.name || "Component").replace(/Tag$/, ""))
 
   const buildInputName = (namespaces, name = "") => (
     [ ...namespaces, name ].map((field, index) => ( index === 0 ? field : `[${field}]` )).join("")
