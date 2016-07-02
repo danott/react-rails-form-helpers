@@ -1,6 +1,6 @@
 {
   "name": "react-rails-form-helpers",
-  "version": "0.1.0-beta.8",
+  "version": "0.1.0-beta.9",
   "description": "Build forms that will be submitted to Rails in React.",
   "main": "lib/index.js",
   "repository": "danott/react-rails-form-helpers",
