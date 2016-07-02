@@ -2,7 +2,7 @@ import React, { PropTypes } from "react"
 
 
 export const nameWithContext = (Lower, prop = "name") => {
-  const getDisplayName = (Lower) => ((Lower.displayName || Lower.name).replace(/Tag$/, ""))
+  const getDisplayName = (component) => component.displayName || component.name || "Component"
 
   const buildInputName = (namespaces, name = "") => (
     [ ...namespaces, name ].map((field, index) => ( index === 0 ? field : `[${field}]` )).join("")
@@ -14,7 +14,7 @@ export const nameWithContext = (Lower, prop = "name") => {
     return <Lower {...replacedProps} />
   }
 
-  higher.displayName = getDisplayName(Lower)
+  higher.displayName = getDisplayName(Lower).replace(/Tag$/, "")
   higher.contextTypes = { railsFormNamespaces: PropTypes.arrayOf(PropTypes.string) }
 
   return higher
