@@ -10,7 +10,7 @@ npm install --save react-rails-form-helpers
 
 Usage via vendoring
 
-You can grab the latest UMD build from https://npmcdn.com/react-rails-form-helpers@latest/dist/react-rails-form-helpers.js
+You can grab the latest UMD build from https://unpkg.com/react-rails-form-helpers@latest/dist/react-rails-form-helpers.js
 
 ## About
 
