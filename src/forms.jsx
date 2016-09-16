@@ -27,7 +27,7 @@ export const FormTag = React.createClass({
     }
 
     const csrfToken = this.props.csrfToken ||
-      document.querySelector("head meta[name='csrf-token']")
+      document.querySelector("head meta[name='csrf-token']").content
 
     return (
       <form
@@ -45,7 +45,7 @@ export const FormTag = React.createClass({
         {csrfToken && (
           <HiddenFieldTag
             name="authenticity_token"
-            value={csrfToken.content}
+            value={csrfToken}
             />
         )}
         <HiddenFieldTag
