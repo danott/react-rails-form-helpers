@@ -6,6 +6,7 @@ export const FormTag = React.createClass({
   propTypes: {
     url: PropTypes.string.isRequired,
     method: PropTypes.oneOf([ "get", "post", "put", "patch", "delete" ]),
+    csrfToken: PropTypes.string,
     children: PropTypes.node,
   },
 
@@ -25,7 +26,8 @@ export const FormTag = React.createClass({
       fakedHTTPMethod = this.props.method
     }
 
-    const csrfToken = document.querySelector("head meta[name='csrf-token']")
+    const csrfToken = this.props.csrfToken ||
+      document.querySelector("head meta[name='csrf-token']")
 
     return (
       <form
@@ -40,7 +42,7 @@ export const FormTag = React.createClass({
             value={fakedHTTPMethod}
             />
         )}
-        {csrfToken && (
+        {this.props.csrfToken && (
           <HiddenFieldTag
             name="authenticity_token"
             value={csrfToken.content}
