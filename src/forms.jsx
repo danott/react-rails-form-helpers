@@ -31,7 +31,7 @@ export const FormTag = React.createClass({
 
     return (
       <form
-        {...whitelistProps(this.props, "url", "children")}
+        {...whitelistProps(this.props, "url", "children", "csrfToken")}
         acceptCharset="UTF-8"
         action={this.props.url}
         method={browserHTTPMethod}
@@ -42,7 +42,7 @@ export const FormTag = React.createClass({
             value={fakedHTTPMethod}
             />
         )}
-        {this.props.csrfToken && (
+        {csrfToken && (
           <HiddenFieldTag
             name="authenticity_token"
             value={csrfToken.content}
