@@ -51,6 +51,8 @@ It provides the Rails context for generating `input[name]` by using it's own `na
 The `FieldsFor` component pushes a name onto the Rails naming context.
 That's it.
 
+`FieldsFor` can be used in place of a `FormFor` if you want to generate the form tag in rails and only render part of the form body using React.
+
 `FieldsFor` is aliased as `HashFields` and `ArrayFields` for expressing intent.
 
 ### Example
