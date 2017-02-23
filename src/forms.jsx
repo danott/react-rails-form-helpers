@@ -111,7 +111,7 @@ export const FieldsFor = React.createClass({
   getChildContext() {
     return {
       railsFormNamespaces: [
-        ...this.context.railsFormNamespaces,
+        ...(this.context.railsFormNamespaces || []),
         this.props.name,
       ],
     }
