@@ -1,12 +1,10 @@
 import { whitelistProps } from "./utils"
 
-export const CheckBoxTag = ({ uncheckedValue = 0, ...props }) => {
-  const propsWithDefault = { defaultValue: 0, ...props }
-
+export const CheckBoxTag = ({ checkedValue = 1, uncheckedValue = 0, ...props }) => {
   return (
     <span>
-      <HiddenFieldTag value={uncheckedValue} />
-      <input type="checkbox" {...propsWithDefault} />
+      <HiddenFieldTag name={props.name} value={uncheckedValue} />
+      <input type="checkbox" value={checkedValue} {...props} />
     </span>
   )
 }
