@@ -37,7 +37,7 @@
     "eslint": "^2.8.0",
     "eslint-config-rackt": "^1.1.1",
     "eslint-plugin-react": "^5.0.1",
-    "react": "^15.0.1",
+    "react": "^15.5.4",
     "webpack": "^1.13.0"
   },
   "babel": {
@@ -49,5 +49,8 @@
     "plugins": [
       "transform-object-assign"
     ]
+  },
+  "dependencies": {
+    "prop-types": "^15.5.10"
   }
 }
