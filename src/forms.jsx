@@ -6,7 +6,7 @@ import { whitelistProps } from "./utils"
 export const FormTag = React.createClass({
   propTypes: {
     url: PropTypes.string.isRequired,
-    method: PropTypes.oneOf([ "get", "post", "put", "patch", "delete" ]),
+    method: PropTypes.oneOf(["get", "post", "put", "patch", "delete"]),
     csrfToken: PropTypes.string,
     children: PropTypes.node,
   },
@@ -27,7 +27,8 @@ export const FormTag = React.createClass({
       fakedHTTPMethod = this.props.method
     }
 
-    const csrfToken = this.props.csrfToken ||
+    const csrfToken =
+      this.props.csrfToken ||
       document.querySelector("head meta[name='csrf-token']").content
 
     return (
@@ -36,29 +37,19 @@ export const FormTag = React.createClass({
         acceptCharset="UTF-8"
         action={this.props.url}
         method={browserHTTPMethod}
-        >
+      >
         {fakedHTTPMethod && (
-          <HiddenFieldTag
-            name="_method"
-            value={fakedHTTPMethod}
-            />
+          <HiddenFieldTag name="_method" value={fakedHTTPMethod} />
         )}
         {csrfToken && (
-          <HiddenFieldTag
-            name="authenticity_token"
-            value={csrfToken}
-            />
+          <HiddenFieldTag name="authenticity_token" value={csrfToken} />
         )}
-        <HiddenFieldTag
-          name="utf8"
-          value="&#x2713;"
-          />
+        <HiddenFieldTag name="utf8" value="&#x2713;" />
         {this.props.children}
       </form>
     )
   },
 })
-
 
 export const FormFor = React.createClass({
   propTypes: {
@@ -77,16 +68,12 @@ export const FormFor = React.createClass({
 
   getChildContext() {
     return {
-      railsFormNamespaces: this.props.name ? [ this.props.name ] : [],
+      railsFormNamespaces: this.props.name ? [this.props.name] : [],
     }
   },
 
   render() {
-    return (
-      <FormTag {...this.props}>
-        {this.props.children}
-      </FormTag>
-    )
+    return <FormTag {...this.props}>{this.props.children}</FormTag>
   },
 })
 
