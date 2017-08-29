@@ -1,19 +1,20 @@
 {
-  "extends": "eslint-config-rackt",
-  "env": {
-    "browser": true,
-    "mocha": true,
-    "node": true
-  },
+  "parser": "babel-eslint",
   "rules": {
-    "valid-jsdoc": 2,
-    "react/jsx-uses-react": 1,
-    "react/jsx-no-undef": 2,
-    "react/wrap-multilines": 2,
-    "comma-dangle": [2, "always-multiline"],
-    "quotes": [2, "double"]
+    "prettier/prettier": ["error", { "trailingComma": "es5", "semi": false }],
+    "react/jsx-uses-vars": "error",
+    "react/jsx-uses-react": "error",
   },
   "plugins": [
-    "react"
-  ]
+    "prettier",
+    "react",
+  ],
+  "extends": [
+    "eslint:recommended",
+    "prettier",
+    "prettier/react",
+  ],
+  "globals": {
+    "document": true,
+  },
 }
