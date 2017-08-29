@@ -1,5 +1,5 @@
-import React, { PropTypes } from "react"
-
+import React from "react"
+import PropTypes from "prop-types"
 
 export const nameWithContext = (Lower, prop = "name") => {
   const getDisplayName = (component) => component.displayName || component.name || "Component"
