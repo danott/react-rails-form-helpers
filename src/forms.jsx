@@ -3,19 +3,17 @@ import PropTypes from "prop-types"
 import { HiddenFieldTag } from "./tags"
 import { whitelistProps } from "./utils"
 
-export const FormTag = React.createClass({
-  propTypes: {
+export class FormTag extends React.Component {
+  static propTypes = {
     url: PropTypes.string.isRequired,
     method: PropTypes.oneOf(["get", "post", "put", "patch", "delete"]),
     csrfToken: PropTypes.string,
     children: PropTypes.node,
-  },
+  }
 
-  getDefaultProps() {
-    return {
-      method: "post",
-    }
-  },
+  static defaultProps = {
+    method: "post",
+  }
 
   render() {
     let browserHTTPMethod = "post"
@@ -48,53 +46,49 @@ export const FormTag = React.createClass({
         {this.props.children}
       </form>
     )
-  },
-})
+  }
+}
 
-export const FormFor = React.createClass({
-  propTypes: {
+export class FormFor extends React.Component {
+  static propTypes = {
     name: PropTypes.string,
-  },
+  }
 
-  getDefaultProps() {
-    return {
-      name: null,
-    }
-  },
+  static defaultProps = {
+    name: null,
+  }
 
-  childContextTypes: {
+  static childContextTypes = {
     railsFormNamespaces: PropTypes.arrayOf(PropTypes.string),
-  },
+  }
 
   getChildContext() {
     return {
       railsFormNamespaces: this.props.name ? [this.props.name] : [],
     }
-  },
+  }
 
   render() {
     return <FormTag {...this.props}>{this.props.children}</FormTag>
-  },
-})
+  }
+}
 
-export const FieldsFor = React.createClass({
-  propTypes: {
+export class FieldsFor extends React.Component {
+  static propTypes = {
     name: PropTypes.string.isRequired,
-  },
+  }
 
-  contextTypes: {
+  static contextTypes = {
     railsFormNamespaces: PropTypes.arrayOf(PropTypes.string),
-  },
+  }
 
-  childContextTypes: {
+  static childContextTypes = {
     railsFormNamespaces: PropTypes.arrayOf(PropTypes.string),
-  },
+  }
 
-  getDefaultProps() {
-    return {
-      name: "",
-    }
-  },
+  static defaultProps = {
+    name: "",
+  }
 
   getChildContext() {
     return {
@@ -103,12 +97,12 @@ export const FieldsFor = React.createClass({
         this.props.name,
       ],
     }
-  },
+  }
 
   render() {
     return <span>{this.props.children}</span>
-  },
-})
+  }
+}
 
 export const ArrayFields = FieldsFor
 export const HashFields = FieldsFor
