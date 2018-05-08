@@ -1,4 +1,5 @@
 import { whitelistProps } from "./utils"
+import React from "react"
 
 export const CheckBoxTag = ({
   checkedValue = 1,
