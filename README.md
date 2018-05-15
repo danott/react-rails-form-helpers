@@ -91,7 +91,7 @@ const EditOrderForm = React.createClass({
           <TextField name="name" defaultValue={this.props.customer.name} />
 
           <Label htmlFor="email">Email</Label>
-          <EmailField name="mail" defaultValue={this.props.customer.email} />
+          <EmailField name="email" defaultValue={this.props.customer.email} />
         </HashFields>
 
         <ArrayFields name="burgers">
@@ -142,16 +142,17 @@ The raw HTML output for this form (sanitized for legibility)
   <input name="authenticity_token" readonly type="hidden" value="csrf_token_from_head">
   <input name="utf8" readonly type="hidden" value="✓">
 
-  <label for="order[customer][name]">Name</label>
+  <label for="order_customer_name">Name</label>
   <input name="order[customer][name]" type="text">
+  <input name="order[customer][name]" id="order_customer_name" type="text">
 
-  <label for="order[customer][email]">Email</label>
-  <input name="order[customer][mail]" type="email">
+  <label for="order_customer_email">Email</label>
+  <input name="order[customer][email]" id="order_customer_email" type="email">
 
-  <input name="order[burgers][0][id]" type="hidden" value="1">
+  <input name="order[burgers][0][id]" id="order_burgers_0_id" type="hidden" value="1">
   <div>
-    <label for="order[burgers][0][variety]">Variety</label>
-    <select name="order[burgers][0][variety]">
+    <label for="order_burgers_0_variety">Variety</label>
+    <select name="order[burgers][0][variety]" id="order_burgers_0_variety">
       <option>
         Hamburger
       </option>
@@ -163,17 +164,17 @@ The raw HTML output for this form (sanitized for legibility)
       </option>
     </select>
 
-    <label for="order[burgers][0][add_fried_egg]">Add a fried egg?</label>
+    <label for="order_burgers_0_add_fried_egg">Add a fried egg?</label>
     <input name="order[burgers][0][add_fried_egg]" readonly type="hidden" value="0">
-    <input name="order[burgers][0][add_fried_egg]" type="checkbox" value="1">
+    <input name="order[burgers][0][add_fried_egg]" id="order_burgers_0_add_fried_egg" type="checkbox" value="1">
 
     <a>Remove from order</a></span>
   </div>
 
-  <input name="order[burgers][1][id]" type="hidden" value="2">
+  <input name="order[burgers][1][id]" id="order_burgers_1_id" type="hidden" value="2">
   <div>
-    <label for="order[burgers][1][variety]">Variety</label>
-    <select name="order[burgers][1][variety]">
+    <label for="order_burgers_1_variety">Variety</label>
+    <select name="order[burgers][1][variety]" id="order_burgers_1_variety">
       <option>
         Hamburger
       </option>
@@ -185,21 +186,21 @@ The raw HTML output for this form (sanitized for legibility)
       </option>
     </select>
 
-    <label for="order[burgers][1][add_fried_egg]">Add a fried egg?</label>
+    <label for="order_burgers_1_add_fried_egg">Add a fried egg?</label>
     <input name="order[burgers][1][add_fried_egg]" readonly type="hidden" value="0">
-    <input name="order[burgers][1][add_fried_egg]" type="checkbox" value="1">
+    <input name="order[burgers][1][add_fried_egg]" id="order_burgers_1_add_fried_egg" type="checkbox" value="1">
 
     <a>Remove from order</a>
   </div>
 
-  <input name="order[burgers][2][id]" type="hidden" value="3">
-  <input name="order[burgers][2][_destroy]" type="hidden" value="1">
+  <input name="order[burgers][2][id]" id="order_burgers_2_id" type="hidden" value="3">
+  <input name="order[burgers][2][_destroy]" id="order_burgers_2__destroy" type="hidden" value="1">
 
   <a>Add a burger</a>
 
-  <label for="order[notes]">Notes</label>
-  <textarea name="order[notes]"></textarea>
+  <label for="order_notes">Notes</label>
+  <textarea name="order[notes]" id="order_notes"></textarea>
 
-  <input name="order[commit]" type="submit" value="Update order">
+  <input name="order[commit]" id="order_commit" type="submit" value="Update order">
 </form>
 ```
