@@ -10,12 +10,25 @@ export const nameWithContext = (Lower, prop = "name") => {
       .map((field, index) => (index === 0 ? field : `[${field}]`))
       .join("")
 
+  const buildInputId = (namespaces, name = "", existingId = null) => {
+    if(existingId) return existingId
+    return [...namespaces, name].join("_")
+  }
+
   const higher = (props, context) => {
     const replacedProp = buildInputName(
       context.railsFormNamespaces,
       props[prop]
     )
-    const replacedProps = Object.assign({}, props, { [prop]: replacedProp })
+    const additionalProps = (prop === "htmlFor")
+      ? {
+          [prop]: buildInputId(context.railsFormNamespaces, props[prop])
+        }
+      : {
+          [prop]: replacedProp,
+          id: buildInputId(context.railsFormNamespaces, props[prop], props.id)
+        }
+    const replacedProps = Object.assign({}, props, additionalProps)
     return <Lower {...replacedProps} />
   }
 
