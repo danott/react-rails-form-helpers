@@ -1,7 +1,7 @@
 import React from "react"
 import PropTypes from "prop-types"
 
-export const nameWithContext = (Lower, prop = "name", isInput = true) => {
+export const nameWithContext = (Lower, prop = "name") => {
   const getDisplayName = component =>
     component.displayName || component.name || "Component"
 
@@ -10,22 +10,23 @@ export const nameWithContext = (Lower, prop = "name", isInput = true) => {
       .map((field, index) => (index === 0 ? field : `[${field}]`))
       .join("")
 
-  const buildInputId = (namespaces, name = "") =>
-    [...namespaces, name].join("_")
+  const buildInputId = (namespaces, name = "", existingId = null) => {
+    if(existingId) return existingId
+    return [...namespaces, name].join("_")
+  }
 
   const higher = (props, context) => {
     const replacedProp = buildInputName(
       context.railsFormNamespaces,
       props[prop]
     )
-    const inputId = buildInputId(context.railsFormNamespaces, props[prop])
-    const additionalProps = isInput
+    const additionalProps = (prop === "htmlFor")
       ? {
-          [prop]: replacedProp,
-          id: buildInputId(context.railsFormNamespaces, props[prop])
+          [prop]: buildInputId(context.railsFormNamespaces, props[prop])
         }
       : {
-          [prop]: buildInputId(context.railsFormNamespaces, props[prop])
+          [prop]: replacedProp,
+          id: buildInputId(context.railsFormNamespaces, props[prop], props.id)
         }
     const replacedProps = Object.assign({}, props, additionalProps)
     return <Lower {...replacedProps} />
