@@ -7,10 +7,10 @@ export const CheckBoxTag = ({
   ...props
 }) => {
   return (
-    <span>
+    <React.Fragment>
       <HiddenFieldTag name={props.name} value={uncheckedValue} />
       <input type="checkbox" value={checkedValue} {...props} />
-    </span>
+    </React.Fragment>
   )
 }
 
