@@ -100,7 +100,7 @@ export class FieldsFor extends React.Component {
   }
 
   render() {
-    return <span>{this.props.children}</span>
+    return <React.fragment>{this.props.children}</React.fragment>
   }
 }
 
