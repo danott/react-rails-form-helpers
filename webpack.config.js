@@ -9,6 +9,8 @@ const reactExternal = {
 }
 
 const config = {
+  mode: "production",
+  target: ["web", "es5"],
   entry: "./src/index.js",
   output: {
     path: path.join(__dirname, "dist"),
@@ -16,18 +18,25 @@ const config = {
     filename: "react-rails-form-helpers.js",
     library: "ReactRailsFormHelpers",
     libraryTarget: "umd",
+    globalObject: "this",
   },
   externals: {
     "react": reactExternal,
   },
   module: {
-    loaders: [
-      { test: /\.jsx?$/, exclude: /node_modules/, loader: "babel" },
+    rules: [
+      { test: /\.jsx?$/, exclude: /node_modules/, loader: "babel-loader" },
     ],
   },
   resolve: {
-    root: [ path.resolve("./src") ],
-    extensions: [ "", ".js", ".jsx" ],
+    modules: [ path.resolve("./src"), "node_modules" ],
+    extensions: [ ".js", ".jsx" ],
+  },
+  optimization: {
+    minimize: false,
+    // webpack 1 left process.env.NODE_ENV unset, so prop-types checks stayed
+    // on in the dist bundle. Keep that behavior.
+    nodeEnv: "development",
   },
   plugins: [],
 }
