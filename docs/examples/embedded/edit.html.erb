@@ -1,0 +1,11 @@
+<%= form_with model: @account do |f| %>
+  <div class="field">
+    <%= f.label :name %>
+    <%= f.text_field :name %>
+  </div>
+
+  <%# Mounted with the react-rails gem. Any mounting approach works. %>
+  <%= react_component "PreferencesFields", preferences: @account.preferences %>
+
+  <%= f.submit %>
+<% end %>

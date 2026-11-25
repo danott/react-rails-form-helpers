@@ -9,26 +9,6 @@ import {
   TextField,
 } from "react-rails-form-helpers"
 
-export const title = "Survey builder"
-export const description =
-  "Nested attributes two levels deep: a survey has many questions, and each question has many choices. Every level is its own FieldsFor, so names stack up to survey[questions_attributes][0][choices_attributes][1][text]."
-export const rails = `
-class Survey < ApplicationRecord
-  has_many :questions
-  accepts_nested_attributes_for :questions
-end
-
-class Question < ApplicationRecord
-  has_many :choices
-  accepts_nested_attributes_for :choices
-end
-
-params.require(:survey).permit(
-  :title,
-  questions_attributes: [:id, :prompt, :kind, choices_attributes: [:id, :text]]
-)
-`
-
 type Question = { key: number; prompt: string; kind: string; choices: number[] }
 
 let nextKey = 100

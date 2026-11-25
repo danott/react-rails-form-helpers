@@ -1,31 +1,15 @@
 /// <reference types="vite/client" />
-import { useEffect, useRef, useState, useSyncExternalStore } from "react"
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react"
+import { createPortal } from "react-dom"
 import { createRoot } from "react-dom/client"
 import { rackParams, toRuby } from "../support/rack-params.js"
-import * as BurgerOrder from "./examples/burger-order.js"
-import * as Survey from "./examples/survey.js"
-import * as Toppings from "./examples/toppings.js"
-import * as Embedded from "./examples/embedded.js"
-
-type ExampleModule = {
-  title: string
-  description: string
-  rails: string
-  default: () => React.ReactNode
-}
-
-const sources = import.meta.glob<string>("./examples/*.tsx", {
-  query: "?raw",
-  import: "default",
-  eager: true,
-})
-
-const examples: Record<string, [ExampleModule, string]> = {
-  "burger-order": [BurgerOrder, sources["./examples/burger-order.tsx"]],
-  survey: [Survey, sources["./examples/survey.tsx"]],
-  toppings: [Toppings, sources["./examples/toppings.tsx"]],
-  embedded: [Embedded, sources["./examples/embedded.tsx"]],
-}
+import { examples, type Example } from "./examples/index.js"
 
 function useHash() {
   return useSyncExternalStore(
@@ -95,40 +79,71 @@ function LiveParams({ children }: { children: React.ReactNode }) {
   )
 }
 
+/**
+ * Renders the HTML Rails would have rendered, then mounts the component into
+ * its `[data-react-class]` element with its `data-react-props`, as react-rails does.
+ */
+function RailsRendered({
+  html,
+  Component,
+}: Required<Pick<Example, "Component">> & { html: string }) {
+  const host = useRef<HTMLDivElement>(null)
+  const [mount, setMount] = useState<{ el: Element; props: object } | null>(
+    null
+  )
+
+  useLayoutEffect(() => {
+    const el = host.current!.querySelector("[data-react-class]")!
+    setMount({
+      el,
+      props: JSON.parse(el.getAttribute("data-react-props") ?? "{}"),
+    })
+  }, [])
+
+  return (
+    <>
+      <div ref={host} dangerouslySetInnerHTML={{ __html: html }} />
+      {mount && createPortal(<Component {...mount.props} />, mount.el)}
+    </>
+  )
+}
+
 function App() {
   const hash = useHash()
   const slug = hash in examples ? hash : "burger-order"
-  const [example, source] = examples[slug]
-  const Form = example.default
+  const { title, description, Component, railsHtml, files } = examples[slug]
 
   return (
     <div className="layout">
       <nav>
         <h1>React Rails Form Helpers</h1>
-        {Object.entries(examples).map(([key, [{ title }]]) => (
+        {Object.entries(examples).map(([key, example]) => (
           <a
             key={key}
             href={`#${key}`}
             aria-current={key === slug ? "page" : undefined}
           >
-            {title}
+            {example.title}
           </a>
         ))}
       </nav>
       <main>
-        <h2>{example.title}</h2>
-        <p className="lede">{example.description}</p>
+        <h2>{title}</h2>
+        <p className="lede">{description}</p>
         <LiveParams key={slug}>
-          <Form />
+          {railsHtml ? (
+            <RailsRendered html={railsHtml} Component={Component} />
+          ) : (
+            <Component />
+          )}
         </LiveParams>
-        <details open>
-          <summary>Rails side</summary>
-          <pre>{example.rails.trim()}</pre>
-        </details>
-        <details>
-          <summary>React source</summary>
-          <pre>{source}</pre>
-        </details>
+        <h3 className="files-heading">Code</h3>
+        {files.map((file) => (
+          <figure className="file" key={file.path}>
+            <figcaption>{file.path}</figcaption>
+            <pre>{file.source.trim()}</pre>
+          </figure>
+        ))}
       </main>
     </div>
   )
