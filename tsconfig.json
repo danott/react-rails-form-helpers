@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "es2022",
+    "lib": ["es2022", "dom", "dom.iterable"],
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "jsx": "react-jsx",
+    "strict": true,
+    "skipLibCheck": true,
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+    "types": ["vitest/globals"],
+    "paths": {
+      "react-rails-form-helpers": ["./src/index.ts"]
+    }
+  },
+  "include": ["src", "test", "support", "docs", "vitest.config.ts"]
+}
