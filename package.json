@@ -1,59 +1,51 @@
 {
   "name": "react-rails-form-helpers",
-  "version": "0.1.0-beta.19",
+  "version": "1.0.0",
   "description": "Build forms that will be submitted to Rails in React.",
-  "main": "lib/index.js",
   "repository": "danott/react-rails-form-helpers",
   "keywords": [
     "react",
     "rails",
     "forms"
   ],
-  "scripts": {
-    "build": "npm run build:lib && npm run build:dist",
-    "build:dist": "NODE_ENV=production webpack",
-    "build:lib": "babel ./src --out-dir ./lib",
-    "dev:dist": "NODE_ENV=production webpack --watch",
-    "dev:lib": "babel ./src --out-dir ./lib --watch",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "eslint-check": "eslint --print-config .eslintrc.js | eslint-config-prettier-check",
-    "lint": "eslint --ext=js,jsx --fix src",
-    "prepublish": "npm run build"
-  },
-  "files": [
-    "dist",
-    "lib",
-    "src"
-  ],
   "author": "Dan Ott <npmjs@danott.us> (https://danott.co)",
   "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepublishOnly": "npm run typecheck && npm test && npm run build"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  },
+  "prettier": {
+    "semi": false,
+    "trailingComma": "es5"
+  },
   "devDependencies": {
-    "@babel/cli": "^7.29.7",
-    "@babel/core": "^7.29.13",
-    "@babel/eslint-parser": "^7.29.13",
-    "@babel/plugin-transform-object-assign": "^7.29.7",
-    "@babel/preset-env": "^7.29.14",
-    "@babel/preset-react": "^7.29.7",
-    "babel-loader": "^9.2.1",
-    "eslint": "^8.57.1",
-    "eslint-plugin-prettier": "^3.4.1",
-    "eslint-plugin-react": "^7.37.5",
-    "prettier": "^1.19.1",
-    "react": "^16.14.0",
-    "webpack": "^5.113.0",
-    "webpack-cli": "^5.1.4"
-  },
-  "babel": {
-    "presets": [
-      "@babel/preset-env",
-      "@babel/preset-react"
-    ],
-    "plugins": [
-      "@babel/plugin-transform-object-assign"
-    ]
-  },
-  "dependencies": {
-    "eslint-config-prettier": "^2.3.0",
-    "prop-types": "^15.5.10"
+    "@types/react": "^19.3.1",
+    "@types/react-dom": "^19.3.0",
+    "jsdom": "^31.0.1",
+    "prettier": "^3.10.1",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.1"
   }
 }

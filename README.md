@@ -1,206 +1,167 @@
 # React Rails Form Helpers
 
-## Installation
-
-Using via npm
+Build forms in React that submit the params Rails expects.
 
 ```
-npm install --save react-rails-form-helpers
+npm install react-rails-form-helpers
 ```
 
-Usage via vendoring
-
-You can grab the latest UMD build from https://unpkg.com/react-rails-form-helpers@latest/dist/react-rails-form-helpers.js
+Requires React 19.
 
 ## About
 
-This package provides components for composing a form targeted at Rails.
-The main intent of this package is for communicating the intent of the form via named components.
-If you're scared by *Rails Magic* you'll be happy to know that these components are mostly dumb.
-The only magical parts are generating the attribute names and ensuring that the fields Rails expects exist on a form.
+These components name your inputs the way Rails' form builder does, and add the hidden inputs Rails relies on. Everything else is a plain DOM element: every prop you pass, including `ref`, goes straight to the `<form>`, `<input>`, `<select>`, `<textarea>`, or `<label>` underneath.
 
-There are two varieties of components.
+There are two kinds of components.
 
-### "FieldTag" components
-
- The components with a `Tag` suffix are not magical at all.
- They exist to mirror the [Rails form helpers][] for expressing the intent.
- They are tiny wrappers around the built in ReactDOM `<input />` and `<select />` components.
-
-### "Field" components
-
- The components without a `Tag` suffix are only slightly magical.
- They use a React context to generate the `input[name]` and `label[for]` attribute for nested attributes.
+- **`…Tag` components** (`TextFieldTag`, `SelectTag`, …) mirror Rails' `*_tag` helpers. They render exactly what you give them.
+- **Field components** (`TextField`, `Select`, …) mirror Rails' form builder. They take a short `name` and turn it into the full `name` and `id` for the form they're in: `name="email"` becomes `name="order[customer_attributes][email]"` and `id="order_customer_attributes_email"`.
 
 ### FormTag
 
-The `FormTag` component is a slim wrapper around the builtin `<form />` component.
-It does three things:
+A `<form>` that adds:
 
-1. Generates the hidden input for Rails' faux `PUT`, `PATCH`, and `DELETE` requests
-2. Generates the hidden input for Rails' `csrf_token` which MUST be include in the document head
-3. Generates the hidden input for Rails' `utf8` param to match the convention
+1. `_method` for `put`, `patch`, and `delete`, which browsers can't send directly.
+2. The CSRF token, read from `<meta name="csrf-token">` in the document head. Pass `csrfToken` yourself when rendering on the server, or `csrfToken={null}` to leave it out. `get` forms never send it.
+
+Pass `enforceUtf8` if your app still expects the `utf8=✓` param from Rails before 6.0.
 
 ### FormFor
 
-The `FormFor` component is a Higher Order Component (HOC) of the `FormTag` component.
-It provides the Rails context for generating `input[name]` by using it's own `name` prop.
+A `FormTag` that names its fields under `name`, like `form_with model: @order`.
 
 ### FieldsFor
 
-The `FieldsFor` component pushes a name onto the Rails naming context.
-That's it.
+Nests the fields inside it under another name, like `fields_for`. On its own (without `FormFor`) it lets React render part of a form that Rails rendered.
 
-`FieldsFor` can be used in place of a `FormFor` if you want to generate the form tag in rails and only render part of the form body using React.
-
-`FieldsFor` is aliased as `HashFields` and `ArrayFields` for expressing intent.
-
-### Example
-
-Let's build an example form with the `FormFor` component for generating correctly named field inputs.
+For `accepts_nested_attributes_for`, add `nested` and it appends `_attributes` for you:
 
 ```jsx
-const EditOrderForm = React.createClass({
-  getInitialState() {
-    return {
-      burgers: this.props.burgers,
-    }
-  },
-
-  handleAddBurger() {
-    const newBurger = { variety: "Hamburger", add_fried_egg: false }
-    const burgers = [ ...this.state.burgers, newBurger ]
-    this.setState({ burgers })
-  },
-
-  handleRemoveBurger(burgerToRemove) {
-    return () => {
-      const burgers = this.state.burgers.map((burger) => (
-        burger === burgerToRemove ? { ...burger, destroy: true } : burger
-      ))
-
-      this.setState({ burgers })
-    }
-  },
-
-  render() {
-    return (
-      <FormFor url="/orders/1" method="put" name="order">
-        <HashFields name="customer">
-          <Label htmlFor="name">Name</Label>
-          <TextField name="name" defaultValue={this.props.customer.name} />
-
-          <Label htmlFor="email">Email</Label>
-          <EmailField name="email" defaultValue={this.props.customer.email} />
-        </HashFields>
-
-        <ArrayFields name="burgers">
-          {this.state.burgers.map((burger, index) => {
-            <HashFields name={index}>
-              {burger.id && (
-                <HiddenField name="id" value={burger.id} />
-              )}
-
-              {burger.destroy ? (
-                <DestroyField />
-              ) : (
-                <div>
-                  <Label htmlFor="variety">Variety</Label>
-                  <Select name="variety" defaultValue={burger.variety}>
-                    <option>Hamburger</option>
-                    <option>Cheeseburger</option>
-                    <option>Bacon Cheeseburger</option>
-                  </Select>
-
-                  <Label htmlFor="add_fried_egg">Add a fried egg?</Label>
-                  <CheckBox name="add_fried_egg" defaultChecked={burger.add_fried_egg} />
-
-                  <a onClick={this.handleRemoveBurger(burger)}>Remove from order</a>
-                </div>
-              )}
-            </HashFields>
-          })}
-        </ArrayFields>
-
-        <a onClick={this.handleAddBurger}>Add a burger</a>
-
-        <Label htmlFor="notes">Notes</Label>
-        <TextArea name="notes" defaultValue={this.props.notes} />
-
-        <Submit name="commit" value="Update order" />
-      </FormFor>
-    )
-  }
-})
+<FieldsFor name="customer" nested>  {/* order[customer_attributes][…] */}
 ```
 
-The raw HTML output for this form (sanitized for legibility)
+`HashFields` and `ArrayFields` are the same component, named to say what you're nesting.
 
-```html
-<form accept-charset="UTF-8" action="/orders/1" id="order" method="post">
-  <input name="_method" readonly type="hidden" value="put">
-  <input name="authenticity_token" readonly type="hidden" value="csrf_token_from_head">
-  <input name="utf8" readonly type="hidden" value="✓">
+### Other fields
 
-  <label for="order_customer_name">Name</label>
-  <input name="order[customer][name]" type="text">
-  <input name="order[customer][name]" id="order_customer_name" type="text">
+- **`CheckBox`** renders a hidden input before the checkbox, so an unchecked box still submits `"0"` (change it with `uncheckedValue`, or leave the hidden input out with `includeHidden={false}`). When the box is disabled, the hidden input is too, so nothing is submitted.
+- **`Radio`** gets an id that includes its value (`order_size_large`). Target it with `<Label htmlFor="size" value="large">`.
+- **`DestroyField`** submits `_destroy=1` to remove a nested record.
+- **`Submit`** submits `commit`, not scoped to the form's name, like `f.submit`.
+- End a name with `[]` to submit an array: `<Select name="topping_ids[]" multiple>` submits `order[topping_ids][]`.
+- **`useFieldName(name)`** returns the `{ name, id }` a field would get, for building your own inputs.
 
-  <label for="order_customer_email">Email</label>
-  <input name="order[customer][email]" id="order_customer_email" type="email">
+## Example
 
-  <input name="order[burgers][0][id]" id="order_burgers_0_id" type="hidden" value="1">
-  <div>
-    <label for="order_burgers_0_variety">Variety</label>
-    <select name="order[burgers][0][variety]" id="order_burgers_0_variety">
-      <option>
-        Hamburger
-      </option>
-      <option>
-        Cheeseburger
-      </option>
-      <option>
-        Bacon Cheeseburger
-      </option>
-    </select>
+```jsx
+import {
+  ArrayFields,
+  CheckBox,
+  DestroyField,
+  FieldsFor,
+  FormFor,
+  HiddenField,
+  Label,
+  Select,
+  Submit,
+  TextArea,
+  TextField,
+} from "react-rails-form-helpers"
 
-    <label for="order_burgers_0_add_fried_egg">Add a fried egg?</label>
-    <input name="order[burgers][0][add_fried_egg]" readonly type="hidden" value="0">
-    <input name="order[burgers][0][add_fried_egg]" id="order_burgers_0_add_fried_egg" type="checkbox" value="1">
+function EditOrderForm({ order }) {
+  const [burgers, setBurgers] = useState(order.burgers)
 
-    <a>Remove from order</a></span>
-  </div>
+  const addBurger = () => setBurgers([...burgers, { variety: "Hamburger" }])
+  const removeBurger = (removed) =>
+    setBurgers(
+      burgers.map((b) => (b === removed ? { ...b, destroy: true } : b))
+    )
 
-  <input name="order[burgers][1][id]" id="order_burgers_1_id" type="hidden" value="2">
-  <div>
-    <label for="order_burgers_1_variety">Variety</label>
-    <select name="order[burgers][1][variety]" id="order_burgers_1_variety">
-      <option>
-        Hamburger
-      </option>
-      <option>
-        Cheeseburger
-      </option>
-      <option>
-        Bacon Cheeseburger
-      </option>
-    </select>
+  return (
+    <FormFor url={`/orders/${order.id}`} method="patch" name="order">
+      <FieldsFor name="customer" nested>
+        <Label htmlFor="name">Name</Label>
+        <TextField name="name" defaultValue={order.customer.name} />
+      </FieldsFor>
 
-    <label for="order_burgers_1_add_fried_egg">Add a fried egg?</label>
-    <input name="order[burgers][1][add_fried_egg]" readonly type="hidden" value="0">
-    <input name="order[burgers][1][add_fried_egg]" id="order_burgers_1_add_fried_egg" type="checkbox" value="1">
+      <ArrayFields name="burgers" nested>
+        {burgers.map((burger, index) => (
+          <FieldsFor name={index} key={index}>
+            {burger.id && <HiddenField name="id" value={burger.id} />}
 
-    <a>Remove from order</a>
-  </div>
+            {burger.destroy ? (
+              <DestroyField />
+            ) : (
+              <div>
+                <Label htmlFor="variety">Variety</Label>
+                <Select name="variety" defaultValue={burger.variety}>
+                  <option>Hamburger</option>
+                  <option>Cheeseburger</option>
+                </Select>
 
-  <input name="order[burgers][2][id]" id="order_burgers_2_id" type="hidden" value="3">
-  <input name="order[burgers][2][_destroy]" id="order_burgers_2__destroy" type="hidden" value="1">
+                <Label htmlFor="add_fried_egg">Add a fried egg?</Label>
+                <CheckBox
+                  name="add_fried_egg"
+                  defaultChecked={burger.add_fried_egg}
+                />
 
-  <a>Add a burger</a>
+                <button type="button" onClick={() => removeBurger(burger)}>
+                  Remove
+                </button>
+              </div>
+            )}
+          </FieldsFor>
+        ))}
+      </ArrayFields>
 
-  <label for="order_notes">Notes</label>
-  <textarea name="order[notes]" id="order_notes"></textarea>
+      <button type="button" onClick={addBurger}>
+        Add a burger
+      </button>
 
-  <input name="order[commit]" id="order_commit" type="submit" value="Update order">
-</form>
+      <Label htmlFor="notes">Notes</Label>
+      <TextArea name="notes" defaultValue={order.notes} />
+
+      <Submit value="Update order" />
+    </FormFor>
+  )
+}
+```
+
+Rails receives:
+
+```ruby
+{
+  "_method" => "patch",
+  "authenticity_token" => "…",
+  "order" => {
+    "customer_attributes" => { "name" => "Jude" },
+    "burgers_attributes" => {
+      "0" => { "id" => "1", "variety" => "Hamburger", "add_fried_egg" => "1" },
+      "1" => { "id" => "2", "_destroy" => "1" },
+      "2" => { "variety" => "Hamburger", "add_fried_egg" => "0" }
+    },
+    "notes" => "Extra pickles"
+  },
+  "commit" => "Update order"
+}
+```
+
+## Upgrading from 0.1
+
+- React 19 is required. `prop-types` is gone; the package ships TypeScript types instead.
+- The package is ESM only, and the UMD build in `dist/` is gone (React 19 no longer ships one either).
+- `Submit` submits `commit` instead of `order[commit]`, matching Rails.
+- The `utf8` param is off by default. Pass `enforceUtf8` to keep it.
+- `CheckBox`'s hidden input is disabled along with the box.
+- `Radio` ids include the value.
+- `DatetimeField` renders `datetime-local`, since browsers dropped `datetime`.
+- Refs reach the underlying element.
+
+## Development
+
+```
+npm install
+npm test
+npm run typecheck
+npm run build
 ```
