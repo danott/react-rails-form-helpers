@@ -9,7 +9,10 @@
     "skipLibCheck": true,
     "verbatimModuleSyntax": true,
     "isolatedModules": true,
-    "types": ["vitest/globals"]
+    "types": ["vitest/globals"],
+    "paths": {
+      "react-rails-form-helpers": ["./src/index.ts"]
+    }
   },
-  "include": ["src", "test", "vitest.config.ts"]
+  "include": ["src", "test", "support", "docs", "vitest.config.ts"]
 }

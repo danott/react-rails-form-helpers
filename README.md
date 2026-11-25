@@ -53,6 +53,8 @@ For `accepts_nested_attributes_for`, add `nested` and it appends `_attributes` f
 
 ## Example
 
+Try this and other nested forms live, with the `params` Rails would receive shown as you edit: [examples](https://danott.github.io/react-rails-form-helpers/).
+
 ```jsx
 import {
   ArrayFields,
@@ -164,4 +166,5 @@ npm install
 npm test
 npm run typecheck
 npm run build
+npm run docs   # the examples site, at http://localhost:5173
 ```

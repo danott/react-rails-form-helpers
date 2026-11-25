@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>React Rails Form Helpers — Examples</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --fg: light-dark(#1d1d1f, #f2f2f2);
+        --muted: light-dark(#6b6b70, #a1a1a6);
+        --bg: light-dark(#ffffff, #161618);
+        --panel: light-dark(#f6f6f7, #1f1f22);
+        --border: light-dark(#e2e2e5, #333338);
+        --accent: light-dark(#cc0000, #ff5c5c);
+        font-family:
+          system-ui,
+          -apple-system,
+          sans-serif;
+        line-height: 1.5;
+        color: var(--fg);
+        background: var(--bg);
+      }
+      body {
+        margin: 0;
+      }
+      .layout {
+        display: grid;
+        grid-template-columns: 220px minmax(0, 1fr);
+        min-height: 100vh;
+      }
+      nav {
+        border-right: 1px solid var(--border);
+        padding: 24px 16px;
+        position: sticky;
+        top: 0;
+        align-self: start;
+      }
+      nav h1 {
+        font-size: 15px;
+        margin: 0 0 16px;
+      }
+      nav a {
+        display: block;
+        padding: 4px 8px;
+        border-radius: 6px;
+        color: var(--fg);
+        text-decoration: none;
+        font-size: 14px;
+      }
+      nav a[aria-current="page"] {
+        background: var(--panel);
+        font-weight: 600;
+      }
+      main {
+        padding: 32px 40px 64px;
+        max-width: 1200px;
+      }
+      main > h2 {
+        margin: 0 0 4px;
+      }
+      .lede {
+        color: var(--muted);
+        margin: 0 0 24px;
+        max-width: 70ch;
+      }
+      .panels {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 24px;
+        align-items: start;
+      }
+      @media (max-width: 900px) {
+        .layout,
+        .panels {
+          grid-template-columns: minmax(0, 1fr);
+        }
+        nav {
+          position: static;
+          border-right: 0;
+          border-bottom: 1px solid var(--border);
+        }
+      }
+      h3 {
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--muted);
+        margin: 0 0 8px;
+      }
+      .demo {
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 20px;
+      }
+      pre {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 16px;
+        margin: 0;
+        overflow-x: auto;
+        font-size: 13px;
+        line-height: 1.45;
+      }
+      .params {
+        position: sticky;
+        top: 16px;
+      }
+      .params[data-submitted] pre {
+        border-color: var(--accent);
+      }
+      details {
+        margin-top: 24px;
+      }
+      summary {
+        cursor: pointer;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+      fieldset {
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        margin: 0 0 16px;
+        padding: 12px 16px;
+      }
+      legend {
+        font-weight: 600;
+        padding: 0 4px;
+      }
+      .field {
+        display: grid;
+        gap: 4px;
+        margin-bottom: 12px;
+      }
+      .row {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-bottom: 8px;
+      }
+      .removed {
+        color: var(--muted);
+        text-decoration: line-through;
+      }
+      input:not([type="checkbox"], [type="radio"], [type="submit"]),
+      select,
+      textarea {
+        font: inherit;
+        padding: 6px 8px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        background: var(--bg);
+        color: var(--fg);
+      }
+      button,
+      input[type="submit"] {
+        font: inherit;
+        font-size: 14px;
+        padding: 4px 12px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        background: var(--panel);
+        color: var(--fg);
+        cursor: pointer;
+      }
+      input[type="submit"] {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="./main.tsx"></script>
+  </body>
+</html>
