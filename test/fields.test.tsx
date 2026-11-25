@@ -150,6 +150,30 @@ test("radio buttons get an id per value, and labels can target them", () => {
   expect(html.querySelector("label")!.htmlFor).toBe("order_size_large")
 })
 
+test("checkboxes for an array get an id per value, like collection_check_boxes", () => {
+  const ui = (
+    <Form>
+      <HiddenField name="topping_ids[]" value="" />
+      <CheckBox
+        name="topping_ids[]"
+        checkedValue={3}
+        includeHidden={false}
+        defaultChecked
+      />
+      <Label htmlFor="topping_ids[]" value={3}>
+        Avocado
+      </Label>
+    </Form>
+  )
+  const html = render(ui)
+
+  expect(html.querySelector("input[type=checkbox]")!.id).toBe(
+    "order_topping_ids_3"
+  )
+  expect(html.querySelector("label")!.htmlFor).toBe("order_topping_ids_3")
+  expect(railsParams(ui)).toMatchObject({ order: { topping_ids: ["", "3"] } })
+})
+
 test("fields forward refs to the underlying element (#19)", () => {
   const ref = createRef<HTMLInputElement>()
   render(

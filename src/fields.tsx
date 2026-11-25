@@ -17,7 +17,19 @@ function field<P extends { name?: string; id?: string }>(
   return Field
 }
 
-export const CheckBox = field(Tags.CheckBoxTag, "CheckBox")
+/**
+ * A checkbox and its hidden unchecked value. When the name ends in `[]`, the
+ * id includes the checked value, like Rails' `burger_topping_ids_1`.
+ */
+export const CheckBox = (props: FieldProps<Tags.CheckBoxTagProps>) => {
+  const field = useFieldName(props.name)
+  const id =
+    props.id ??
+    (props.name.endsWith("[]")
+      ? `${field.id}_${sanitizedValue(props.checkedValue ?? "1")}`
+      : field.id)
+  return <Tags.CheckBoxTag {...props} name={field.name} id={id} />
+}
 export const ColorField = field(Tags.ColorFieldTag, "ColorField")
 export const DateField = field(Tags.DateFieldTag, "DateField")
 export const DatetimeField = field(Tags.DatetimeFieldTag, "DatetimeField")

@@ -46,6 +46,7 @@ For `accepts_nested_attributes_for`, add `nested` and it appends `_attributes` f
 
 - **`CheckBox`** renders a hidden input before the checkbox, so an unchecked box still submits `"0"` (change it with `uncheckedValue`, or leave the hidden input out with `includeHidden={false}`). When the box is disabled, the hidden input is too, so nothing is submitted.
 - **`Radio`** gets an id that includes its value (`order_size_large`). Target it with `<Label htmlFor="size" value="large">`.
+- **`CheckBox`** named with a trailing `[]` does the same (`order_topping_ids_3`), for checking several ids like `collection_check_boxes`. Pass `includeHidden={false}` and put one `<HiddenField name="topping_ids[]" value="" />` first, so unchecking every box clears the list.
 - **`DestroyField`** submits `_destroy=1` to remove a nested record.
 - **`Submit`** submits `commit`, not scoped to the form's name, like `f.submit`.
 - End a name with `[]` to submit an array: `<Select name="topping_ids[]" multiple>` submits `order[topping_ids][]`.
@@ -82,6 +83,7 @@ function EditOrderForm({ order }) {
   return (
     <FormFor url={`/orders/${order.id}`} method="patch" name="order">
       <FieldsFor name="customer" nested>
+        <HiddenField name="id" value={order.customer.id} />
         <Label htmlFor="name">Name</Label>
         <TextField name="name" defaultValue={order.customer.name} />
       </FieldsFor>
@@ -136,7 +138,7 @@ Rails receives:
   "_method" => "patch",
   "authenticity_token" => "…",
   "order" => {
-    "customer_attributes" => { "name" => "Jude" },
+    "customer_attributes" => { "id" => "7", "name" => "Jude" },
     "burgers_attributes" => {
       "0" => { "id" => "1", "variety" => "Hamburger", "add_fried_egg" => "1" },
       "1" => { "id" => "2", "_destroy" => "1" },

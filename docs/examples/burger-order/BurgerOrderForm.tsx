@@ -13,24 +13,6 @@ import {
   TextField,
 } from "react-rails-form-helpers"
 
-export const title = "Burger order"
-export const description =
-  "An order with one customer and many burgers, saved with accepts_nested_attributes_for. Add and remove burgers: saved burgers are marked _destroy, new ones just disappear."
-export const rails = `
-class Order < ApplicationRecord
-  has_one :customer
-  has_many :burgers
-  accepts_nested_attributes_for :customer
-  accepts_nested_attributes_for :burgers, allow_destroy: true
-end
-
-params.require(:order).permit(
-  :notes,
-  customer_attributes: [:id, :name, :email],
-  burgers_attributes: [:id, :variety, :add_fried_egg, :_destroy]
-)
-`
-
 type Burger = {
   key: number
   id?: number
@@ -71,7 +53,7 @@ export default function BurgerOrder() {
       <fieldset>
         <legend>Customer</legend>
         <FieldsFor name="customer" nested>
-          <HiddenField name="id" value="7" />
+          <HiddenField name="id" value={7} />
           <div className="field">
             <Label htmlFor="name">Name</Label>
             <TextField name="name" defaultValue="Jude" />
